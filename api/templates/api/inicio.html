@@ -1,0 +1,68 @@
+{% comment %}
+  Vista HTML base del proyecto: catálogo tipo tienda (inspirada en PC Factory).
+  Incluye el FOOTER con Nombre Completo, Sección y Año del alumno.
+{% endcomment %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tienda Hardware | Componentes PC</title>
+  <style>
+    :root { --naranja:#f26b1d; --oscuro:#1c1c1c; --gris:#f3f3f3; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:system-ui,Segoe UI,Arial,sans-serif; background:var(--gris); color:#222;
+           min-height:100vh; display:flex; flex-direction:column; }
+    header { background:var(--oscuro); color:#fff; padding:14px 24px; display:flex; align-items:center; gap:24px; flex-wrap:wrap; }
+    header h1 { margin:0; font-size:1.4rem; } header h1 span { color:var(--naranja); }
+    header a { color:#ddd; text-decoration:none; font-size:.9rem; } header a:hover { color:var(--naranja); }
+    nav.cats { background:var(--naranja); padding:8px 24px; display:flex; gap:6px; flex-wrap:wrap; }
+    nav.cats a { color:#fff; text-decoration:none; padding:6px 12px; border-radius:16px; font-size:.9rem; }
+    nav.cats a.activa, nav.cats a:hover { background:rgba(0,0,0,.25); }
+    main { flex:1; max-width:1150px; width:100%; margin:0 auto; padding:24px; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:16px; }
+    .card { background:#fff; border-radius:10px; padding:16px; box-shadow:0 1px 4px rgba(0,0,0,.12); display:flex; flex-direction:column; gap:6px; }
+    .card small { color:#777; } .card h3 { margin:0; font-size:1rem; }
+    .precio { font-size:1.3rem; font-weight:700; color:var(--naranja); margin-top:auto; }
+    .stock { font-size:.8rem; } .ok { color:#1a8a3a; } .sin { color:#c0392b; }
+    footer { background:var(--oscuro); color:#ccc; text-align:center; padding:16px; font-size:.9rem; }
+    footer strong { color:#fff; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Tienda <span>Hardware</span></h1>
+    <a href="/api/docs/">Documentación API (Swagger)</a>
+    <a href="/api/productos/">API Productos</a>
+    <a href="/admin/">Administración</a>
+  </header>
+
+  <nav class="cats">
+    <a href="/" class="{% if not categoria_actual %}activa{% endif %}">Todo</a>
+    {% for c in categorias %}
+      <a href="/?categoria={{ c.id }}" class="{% if categoria_actual == c.id|stringformat:'s' %}activa{% endif %}">{{ c.nombre }}</a>
+    {% endfor %}
+  </nav>
+
+  <main>
+    <div class="grid">
+      {% for p in productos %}
+        <article class="card">
+          <small>{{ p.categoria.nombre }} &middot; {{ p.marca }}</small>
+          <h3>{{ p.nombre }}</h3>
+          <small>SKU: {{ p.sku }}</small>
+          <div class="precio">${{ p.precio|floatformat:0 }}</div>
+          {% if p.stock > 0 %}<span class="stock ok">Stock: {{ p.stock }}</span>{% else %}<span class="stock sin">Sin stock</span>{% endif %}
+        </article>
+      {% empty %}
+        <p>No hay productos para mostrar. Ejecuta <code>python manage.py cargar_datos</code>.</p>
+      {% endfor %}
+    </div>
+  </main>
+
+  <!-- FOOTER OBLIGATORIO: datos del alumno -->
+  <footer>
+    <strong>{{ ALUMNO_NOMBRE }}</strong> &middot; Sección: {{ ALUMNO_SECCION }} &middot; Año: {{ ALUMNO_ANIO }}
+  </footer>
+</body>
+</html>

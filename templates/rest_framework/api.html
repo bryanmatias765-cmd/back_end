@@ -1,0 +1,9 @@
+{% extends "rest_framework/base.html" %}
+{# Sobrescribe el navegador de la API de DRF para mostrar el footer con los datos del alumno. #}
+{% block content %}
+  {{ block.super }}
+  <hr>
+  <footer style="text-align:center;color:#666;padding:10px 0 25px;">
+    <strong>{{ ALUMNO_NOMBRE }}</strong> &middot; Sección: {{ ALUMNO_SECCION }} &middot; Año: {{ ALUMNO_ANIO }}
+  </footer>
+{% endblock %}
